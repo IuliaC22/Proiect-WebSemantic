@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="ro">
+<head>
+    <title>
+        Proiect Web
+    </title>
+    <style>
+        td,th{
+
+            border:1px solid black;
+
+        }
+    </style>
+</head>
+<body>
+<h1>Proiect Web</h1>
+<div>
+
+    <button id="1" onclick="webscraping()">Buton 1</button>
+    <table>
+        <tr>
+            <th>Denumire</th>
+            <th>Pret</th>
+        </tr>
+        <tr>
+            <td id="celula1"></td>
+            <td id="celula2"></td>
+        </tr>
+        <tr>
+            <td id="celula3"></td>
+            <td id="celula4"></td>
+        </tr>
+        <tr>
+            <td id="celula5"></td>
+            <td id="celula6"></td>
+        </tr>
+    </table>
+
+    <input id="input1" type="text">
+    <input id="input2" type="text">
+
+    <button id="2" onclick="json()">Buton 2</button>
+    <table id="tabela2">
+        <tr>
+            <th>Denumire</th>
+            <th>Pret</th>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+    </table>
+
+    <button id="3" onclick="rdf()">Buton 3</button>
+
+    <table id="tabela3">
+        <tr>
+            <th>Denumire</th>
+            <th>Pret</th>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+    </table>
+
+    <input id="input3" type="text">
+    <button id="4" onclick="sterge()">Buton 4</button>
+
+    <table id="tabela4">
+        <tr>
+            <th>Denumire</th>
+            <th>Pret</th>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+        <tr>
+            <td ></td>
+            <td ></td>
+        </tr>
+
+    </table>
+
+</div>
+
+<script>
+    function webscraping() {
+        var cerere = new XMLHttpRequest();
+        cerere.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                let text = this.responseText;
+
+                let lines = text.split('\n');
+
+
+                let book1 = lines[0].split(' @ ');
+                let book1Title = book1[0];
+                let book1Price = book1[1];
+
+                let book2 = lines[1].split(' @ ');
+                let book2Title = book2[0];
+                let book2Price = book2[1];
+
+                let book3 = lines[2].split(' @ ');
+                let book3Title = book3[0];
+                let book3Price = book3[1];
+
+
+                console.log(book1Title + ': ' + book1Price);
+                console.log(book2Title + ': ' + book2Price);
+                console.log(book3Title + ': ' + book3Price);
+
+                var cell1 = document.getElementById("celula1");
+                var cell2 = document.getElementById("celula2");
+                var cell3 = document.getElementById("celula3");
+                var cell4 = document.getElementById("celula4");
+                var cell5 = document.getElementById("celula5");
+                var cell6 = document.getElementById("celula6");
+                cell1.innerHTML = book1Title;
+                cell2.innerHTML = book1Price;
+                cell3.innerHTML = book2Title;
+                cell4.innerHTML = book2Price;
+                cell5.innerHTML = book3Title;
+                cell6.innerHTML = book3Price;
+            }
+        };
+        cerere.open("GET", "Webscraping.php", true);
+        cerere.send();
+    }
+</script>
+<script>
+    function json() {
+        var cell1 = document.getElementById("celula1");
+        var cell2 = document.getElementById("celula2");
+        var cell3 = document.getElementById("celula3");
+        var cell4 = document.getElementById("celula4");
+        var cell5 = document.getElementById("celula5");
+        var cell6 = document.getElementById("celula6");
+        var input1 = document.getElementById("input1");
+        var input2 = document.getElementById("input2");
+
+        data = [
+     {
+         titlu : cell1.innerText,
+         price : cell2.innerText,
+     },
+     {
+         titlu : cell3.innerText,
+         price : cell4.innerText,
+     },
+     {
+         titlu : cell5.innerText,
+         price : cell6.innerText,
+     },
+     {
+         titlu : input1.value,
+         price : input2.value,
+     }
+ ]
+        var cerere = new XMLHttpRequest();
+        cerere.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+              response = JSON.parse(this.responseText);
+
+                document.getElementById("tabela2").rows[1].cells[0].innerHTML = response[0].titlu;
+                document.getElementById("tabela2").rows[1].cells[1].innerHTML = response[0].price;
+                document.getElementById('tabela2').rows[2].cells[0].innerHTML = response[1].titlu;
+                document.getElementById("tabela2").rows[2].cells[1].innerHTML = response[1].price;
+                document.getElementById("tabela2").rows[3].cells[0].innerHTML = response[2].titlu;
+                document.getElementById("tabela2").rows[3].cells[1].innerHTML = response[2].price;
+                document.getElementById("tabela2").rows[4].cells[0].innerHTML = response[3].price;
+                document.getElementById("tabela2").rows[4].cells[1].innerHTML = response[3].price;
+            }
+        };
+        cerere.open("POST", "Json.php", true);
+        cerere.setRequestHeader("Content-Type", "application/json");
+        cerere.send(JSON.stringify(data));
+    }
+</script>
+<script>
+    function rdf(){
+        data2 = [
+            {
+                titlu : document.getElementById("tabela2").rows[1].cells[0].innerHTML,
+                price : document.getElementById("tabela2").rows[1].cells[1].innerHTML,
+            },
+            {
+                titlu : document.getElementById('tabela2').rows[2].cells[0].innerHTML ,
+                price : document.getElementById("tabela2").rows[2].cells[1].innerHTML,
+            },
+            {
+                titlu : document.getElementById("tabela2").rows[3].cells[0].innerHTML,
+                price : document.getElementById("tabela2").rows[3].cells[1].innerHTML,
+            },
+            {
+                titlu :  document.getElementById("tabela2").rows[4].cells[0].innerHTML,
+                price : document.getElementById("tabela2").rows[4].cells[1].innerHTML,
+            }
+        ]
+        var cerere = new XMLHttpRequest();
+        cerere.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                response2 = JSON.parse(this.responseText);
+                document.getElementById("tabela3").rows[1].cells[0].innerHTML = response2[0].titlu;
+                document.getElementById("tabela3").rows[1].cells[1].innerHTML = response2[0].price;
+                document.getElementById("tabela3").rows[2].cells[0].innerHTML = response2[1].titlu;
+                document.getElementById("tabela3").rows[2].cells[1].innerHTML = response2[1].price;
+                document.getElementById("tabela3").rows[3].cells[0].innerHTML = response2[2].titlu;
+                document.getElementById("tabela3").rows[3].cells[1].innerHTML = response2[2].price;
+                document.getElementById("tabela3").rows[4].cells[0].innerHTML = response2[3].titlu;
+                document.getElementById("tabela3").rows[4].cells[1].innerHTML = response2[3].price;
+            }
+        };
+        cerere.open("POST", "rdf.php", true);
+        cerere.setRequestHeader("Content-Type", "application/json");
+        cerere.send(JSON.stringify(data2));
+}
+</script>
+
+<script>
+    function sterge() {
+        var input3 = document.getElementById("input3").value;
+
+
+        var cerere = new XMLHttpRequest();
+        cerere.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                response2 = JSON.parse(this.responseText);
+                document.getElementById("tabela4").rows[1].cells[0].innerHTML = response2[0].titlu;
+                document.getElementById("tabela4").rows[1].cells[1].innerHTML = response2[0].price;
+                document.getElementById("tabela4").rows[2].cells[0].innerHTML = response2[1].titlu;
+                document.getElementById("tabela4").rows[2].cells[1].innerHTML = response2[1].price;
+                document.getElementById("tabela4").rows[3].cells[0].innerHTML = response2[2].titlu;
+                document.getElementById("tabela4").rows[3].cells[1].innerHTML = response2[2].price;
+
+            }
+        }
+                cerere.open("POST", "sterge.php", true);
+                cerere.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                cerere.send("input3=" + input3);
+            }
+
+</script>
+</body>
+</html>

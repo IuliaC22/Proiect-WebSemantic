@@ -1,0 +1,6 @@
+{
+    "require": {
+      "ext-curl": "*",
+        "easyrdf/easyrdf": "^1.1"
+    }
+}
